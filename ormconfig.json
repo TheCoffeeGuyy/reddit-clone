@@ -1,0 +1,28 @@
+{
+   "type": "postgres",
+   "host": "localhost",
+   "port": 5432,
+   "username": "postgres",
+   "password": "whosyourdaddy123",
+   "database": "reddit",
+   "synchronize": false,
+   "logging": false,
+   "strictNullChecks": true, 
+   "strictFunctionTypes": true, 
+   "strictBindCallApply": true, 
+   "entities": [
+      "src/entities/**/*.ts"
+   ],
+   "migrations": [
+      "src/migrations/**/*.ts"
+   ],
+   "subscribers": [
+      "src/subscribers/**/*.ts"
+   ],
+   "cli": {
+      "entitiesDir": "src/entities",
+      "migrationsDir": "src/migrations",
+      "subscribersDir": "src/subscribers"
+   },
+   "resolveJsonModule": true
+}
