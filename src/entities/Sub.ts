@@ -1,15 +1,11 @@
-/* eslint-disable import/no-unresolved */
+import { Expose } from 'class-transformer';
 import {
   Entity as ToEntity,
   Column, Index, ManyToOne, JoinColumn, OneToMany,
 } from 'typeorm';
-// eslint-disable-next-line import/extensions
 import { makeId, slugify } from '../utils/helpers';
-// eslint-disable-next-line import/extensions
 import Entity from './Entity';
-// eslint-disable-next-line import/extensions
 import Post from './Post';
-// eslint-disable-next-line import/extensions
 import User from './User';
 
     @ToEntity('subs')
@@ -35,10 +31,25 @@ export default class Sub extends Entity {
   @Column({ nullable: true })
   bannerUrn: string
 
+  @Column()
+  username: string
+
   @ManyToOne(() => User)
   @JoinColumn({ name: 'username', referencedColumnName: 'username' })
   user: User
 
   @OneToMany(() => Post, (post) => post.sub)
   posts: Post[]
+
+  @Expose()
+  get imageUrl(): string {
+    return this.imageUrn ? `${process.env.APP_URL}/images/${this.imageUrn}`:
+      'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
+  }
+
+  @Expose()
+  get bannerUrl(): string | undefined {
+    return this.bannerUrn ? `${process.env.APP_URL}/images/${this.bannerUrn}`:
+      undefined
+  }
 }

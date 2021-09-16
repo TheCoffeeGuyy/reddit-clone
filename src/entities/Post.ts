@@ -1,4 +1,5 @@
 /* eslint-disable import/no-unresolved */
+import { Exclude, Expose } from 'class-transformer';
 import {
   Entity as ToEntity,
   Column, Index, ManyToOne, JoinColumn, BeforeInsert, OneToMany,
@@ -12,6 +13,7 @@ import Entity from './Entity';
 import Sub from './Sub';
 // eslint-disable-next-line import/extensions
 import User from './User';
+import Vote from './Vote';
 
   @ToEntity('posts')
 export default class Post extends Entity {
@@ -37,6 +39,9 @@ export default class Post extends Entity {
   @Column()
   subName: string
 
+  @Column()
+  username: string
+
   @ManyToOne(() => User, (user) => user.posts)
   @JoinColumn({ name: 'username', referencedColumnName: 'username' })
   user: User
@@ -45,8 +50,31 @@ export default class Post extends Entity {
   @JoinColumn({ name: 'subName', referencedColumnName: 'name' })
   sub: Sub
 
+  @Exclude()
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[]
+
+  @Expose() get url(): string {
+    return `/r/${this.subName}/${this.identifier}/${this.slug}`;
+  }
+
+  @Expose() get commentCount(): number {
+    return this.comments?.length
+  }
+
+  @Expose() get voteScore(): number {
+    return this.votes?.reduce((pre, cur) => pre + (cur.value || 0), 0)
+  }
+
+  @Exclude()
+  @OneToMany(() => Vote, (vote) => vote.post)
+  votes: Vote[]
+
+  protected userVote: number
+  setUserVote(user: User) {
+    const index = this.votes?.findIndex(v => v.username === user.username)
+    this.userVote = index > -1 ? this.votes[index].value: 0
+  }
 
   @BeforeInsert()
   makeIdAndSlug() {

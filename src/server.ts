@@ -12,6 +12,8 @@ import authRoutes from './routes/auth';
 // eslint-disable-next-line import/extensions
 import postRoutes from './routes/post';
 import subRoutes from './routes/subs';
+import miscRoutes from './routes/misc';
+import userRoutes from './routes/users';
 
 // eslint-disable-next-line import/extensions
 import trim from './middlewares/trim';
@@ -33,10 +35,12 @@ const { PORT } = process.env;
 app.get('/', (_, res) => {
   res.send('Hello world');
 });
-
+app.use(express.static('public'))
 app.use('/api/auth', authRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/subs', subRoutes);
+app.use('/api/misc', miscRoutes);
+app.use('/api/users', userRoutes);
 
 app.listen(PORT, async () => {
   console.log('Server running on 5000');

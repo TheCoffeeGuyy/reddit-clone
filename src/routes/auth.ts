@@ -1,13 +1,11 @@
-/* eslint-disable import/no-unresolved */
 import { Request, Response, Router } from 'express';
 import { validate, isEmpty } from 'class-validator';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import cookie from 'cookie';
-// eslint-disable-next-line import/extensions
 import User from '../entities/User';
-// eslint-disable-next-line import/extensions
 import auth from '../middlewares/auth';
+import user from '../middlewares/user';
 
 const mapErrors = (errors) => {
   const mappedErrors = {};
@@ -17,10 +15,6 @@ const mapErrors = (errors) => {
     mappedErrors[key] = value;
   });
   return mappedErrors;
-  // return errors.recude((prev, err) => {
-  //   prev[err.property] = Object.entries(err.constraints)[0][1];
-  //   return prev;
-  // }, {});
 };
 
 const register = async (req: Request, res: Response) => {
@@ -99,6 +93,6 @@ const logout = async (_: Request, res: Response) => {
 const router = Router();
 router.post('/register', register);
 router.post('/login', login);
-router.get('/logout', auth, logout);
-router.get('/me', auth, me);
+router.get('/logout',user, auth, logout);
+router.get('/me',user, auth, me);
 export default router;

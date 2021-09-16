@@ -13,6 +13,9 @@ module.exports = {
   },
   plugins: [
     '@typescript-eslint',
+    'plugin:import/errors',
+    'plugin:import/warnings',
+    'plugin:import/typescript',
   ],
   rules: {
     'import/extensions': [
